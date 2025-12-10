@@ -38,7 +38,6 @@ stdenvNoCC.mkDerivation rec {
   ];
 
   installPhase = ''
-    mkdir --parents $out/modules/${pname}
-    cp module.a $out/modules/${pname}
+    install --preserve-timestamps -D --target-directory $out/modules/${pname}/ module.a
   '';
 }

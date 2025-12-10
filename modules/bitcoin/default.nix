@@ -48,7 +48,6 @@ stdenvNoCC.mkDerivation rec {
   # The build artifact is a simple `module.a` file, thus we can simply copy it
   # out of the build context
   installPhase = ''
-    mkdir --parents $out/modules/${pname}
-    cp module.a $out/modules/${pname}
+    install --preserve-timestamps -D --target-directory $out/modules/${pname}/ module.a
   '';
 }

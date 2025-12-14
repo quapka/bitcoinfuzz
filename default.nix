@@ -23,6 +23,7 @@ stdenvNoCC.mkDerivation rec {
     rustbitcoin
     ldk
     lnd
+    btcd
   ];
   
   src = ./.;

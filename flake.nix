@@ -28,6 +28,7 @@
         bitcoin-core = pkgs.callPackage ./modules/bitcoin { };
         ldk = pkgs.callPackage ./modules/ldk { };
         lnd = pkgs.callPackage ./modules/lnd { };
+        nbitcoin = pkgs.callPackage ./modules/nbitcoin { };
         # TODO is the build of custommutator somehow affected by other chosen modules?
         custommutator = pkgs.callPackage ./custommutator { };
 
@@ -37,6 +38,7 @@
           bitcoin-core
           btcd
           ldk
+          nbitcoin
           lnd;
         };
       in

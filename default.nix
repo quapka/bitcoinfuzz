@@ -24,6 +24,7 @@ stdenvNoCC.mkDerivation rec {
     ldk
     lnd
     btcd
+    nbitcoin
   ];
   
   src = ./.;
@@ -36,6 +37,7 @@ stdenvNoCC.mkDerivation rec {
     (optionalString (ldk != null) "-DLDK")
     (optionalString (lnd != null) "-DLND")
     (optionalString (btcd != null) "-DBTCD")
+    (optionalString (nbitcoin != null) "-DNBITCOIN")
   ];
 
   # FIXME deciding what modules are available is quite verbose now
@@ -45,6 +47,7 @@ stdenvNoCC.mkDerivation rec {
     (optionalString (ldk != null) "cp ${ldk.outPath}/modules/ldk/module.a modules/ldk/")
     (optionalString (lnd != null) "cp ${lnd.outPath}/modules/lnd/module.a modules/lnd/")
     (optionalString (btcd != null) "cp ${btcd.outPath}/modules/btcd/module.a modules/btcd/")
+    (optionalString (nbitcoin != null) "cp ${nbitcoin.outPath}/modules/nbitcoin/module.a modules/nbitcoin/")
   ];
 
   installPhase = ''

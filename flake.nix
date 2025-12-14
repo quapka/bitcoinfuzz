@@ -20,11 +20,12 @@
         overlays = [];
         pkgs = import nixpkgs { inherit system overlays; };
 
-        bitcoinfuzz = pkgs.callPackage ./default.nix { inherit bitcoin-core rustbitcoin ldk; };
+        bitcoinfuzz = pkgs.callPackage ./default.nix { inherit bitcoin-core rustbitcoin ldk lnd; };
         # Build individual modules
         rustbitcoin = pkgs.callPackage ./modules/rustbitcoin { };
         bitcoin-core = pkgs.callPackage ./modules/bitcoin { };
         ldk = pkgs.callPackage ./modules/ldk { };
+        lnd = pkgs.callPackage ./modules/lnd { };
         # TODO is the build of custommutator somehow affected by other chosen modules?
         custommutator = pkgs.callPackage ./custommutator { };
 
@@ -32,6 +33,7 @@
           rustbitcoin
           bitcoin-core
           ldk
+          lnd
         ];
       in
       with pkgs; {
@@ -43,7 +45,7 @@
 
           inherit bitcoinfuzz custommutator;
           # inherit individual modules
-          inherit bitcoin-core rustbitcoin ldk;
+          inherit bitcoin-core rustbitcoin ldk lnd;
         };
       }
     );

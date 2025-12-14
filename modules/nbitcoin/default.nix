@@ -3,38 +3,54 @@
   buildDotnetModule,
 
   dotnetCorePackages,
-  clang
+  clang,
+  openssl
 }:
 let
   fs = lib.fileset;
   sourceFiles = fs.unions [
-    ./. # Thanks to the sourceRoot definition later, this adds the ./bitcoinfuzz/modules/bitcoin files
-    ./../../include # This adds ./bicoinfuzz/include
+    ./.
+    ./../../include
   ];
 in
 buildDotnetModule rec {
   pname = "nbitcoin";
   name = "bitcoinfuzz-${pname}";
 
-  dotnet-sdk = dotnetCorePackages.sdk_9_0;
-  dotnet-runtime = dotnetCorePackages.runtime_9_0;
+  dotnet-sdk = dotnetCorePackages.sdk_9_0-bin;
+  dotnet-runtime = dotnetCorePackages.runtime_10_0-bin;
 
   buildInputs = [
-    dotnetCorePackages.sdk_9_0
     clang
+    openssl
   ];
 
-  selfContainedBuild = true;
 
   src = fs.toSource {
-    # We need access to bitcoinfuzz/include files
     root = ./../..;
     fileset = sourceFiles;
   };
   sourceRoot = "${src.name}/modules/nbitcoin";
-  projectFile = ./NBitcoin.CppBridge.csproj;
 
+
+  projectFile = "./NBitcoin.CppBridge.csproj"; # must be a string! Not a path, without "
+  selfContainedBuild = true;
   nugetDeps = ./deps.json;
 
-  executables = [ ];
+  NBITCOIN_LIB_PATH = "./bin/Release/net9.0/linux-x64/native/NBitcoin.CppBridge.so";
+
+  postInstall = ''
+    cp ${NBITCOIN_LIB_PATH} ./
+    make -o ${NBITCOIN_LIB_PATH} module.a
+  '';
+
+  postFixup = ''
+    mv $out/lib/${pname}/NBitcoin.CppBridge.so $out/
+    chmod +x $out/NBitcoin.CppBridge.so
+    install --preserve-timestamps -D --target-directory $out/modules/${pname}/ module.a
+  '';
+
+  meta = {
+    platforms = lib.intersectLists lib.platforms.x86_64 lib.platforms.linux;
+  };
 }

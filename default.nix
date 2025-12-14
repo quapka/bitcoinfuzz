@@ -34,6 +34,7 @@ stdenvNoCC.mkDerivation rec {
     (optionalString (rustbitcoin != null) "-DRUST_BITCOIN")
     (optionalString (ldk != null) "-DLDK")
     (optionalString (lnd != null) "-DLND")
+    (optionalString (btcd != null) "-DBTCD")
   ];
 
   # FIXME deciding what modules are available is quite verbose now
@@ -42,6 +43,7 @@ stdenvNoCC.mkDerivation rec {
     (optionalString (rustbitcoin != null) "cp ${rustbitcoin.outPath}/modules/rustbitcoin/module.a modules/rustbitcoin/")
     (optionalString (ldk != null) "cp ${ldk.outPath}/modules/ldk/module.a modules/ldk/")
     (optionalString (lnd != null) "cp ${lnd.outPath}/modules/lnd/module.a modules/lnd/")
+    (optionalString (btcd != null) "cp ${btcd.outPath}/modules/lnd/module.a btcd/lnd/")
   ];
 
   installPhase = ''

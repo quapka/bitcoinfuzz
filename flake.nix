@@ -23,6 +23,7 @@
         bitcoinfuzz = pkgs.callPackage ./default.nix { inherit modules; };
 
         # Build individual modules
+        btcd = pkgs.callPackage ./modules/btcd/default.nix { };
         rustbitcoin = pkgs.callPackage ./modules/rustbitcoin { };
         bitcoin-core = pkgs.callPackage ./modules/bitcoin { };
         ldk = pkgs.callPackage ./modules/ldk { };
@@ -34,6 +35,7 @@
           inherit
           rustbitcoin
           bitcoin-core
+          btcd
           ldk
           lnd;
         };

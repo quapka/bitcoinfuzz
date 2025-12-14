@@ -20,6 +20,7 @@ stdenvNoCC.mkDerivation rec {
   buildInputs = [
     bitcoin-core
     rustbitcoin
+    ldk
   ];
   
   src = ./.;

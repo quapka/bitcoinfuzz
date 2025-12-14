@@ -38,8 +38,8 @@
           bitcoin-core
           btcd
           ldk
-          lnd;
           nbitcoin;
+          lnd = null;
         };
       in
       with pkgs; {

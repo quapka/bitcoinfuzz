@@ -43,7 +43,7 @@ stdenvNoCC.mkDerivation rec {
     (optionalString (rustbitcoin != null) "cp ${rustbitcoin.outPath}/modules/rustbitcoin/module.a modules/rustbitcoin/")
     (optionalString (ldk != null) "cp ${ldk.outPath}/modules/ldk/module.a modules/ldk/")
     (optionalString (lnd != null) "cp ${lnd.outPath}/modules/lnd/module.a modules/lnd/")
-    (optionalString (btcd != null) "cp ${btcd.outPath}/modules/lnd/module.a btcd/lnd/")
+    (optionalString (btcd != null) "cp ${btcd.outPath}/modules/btcd/module.a modules/btcd/")
   ];
 
   installPhase = ''

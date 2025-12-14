@@ -10,7 +10,6 @@ buildGoModule rec {
   src = ./.;
 
   buildPhase = ''
-    export CGO_ENABLED=0
     go build -o libbtcd_wrapper.a -buildmode=c-archive -tags=libfuzzer -gcflags=all=-d=libfuzzer wrapper.go
   '';
 

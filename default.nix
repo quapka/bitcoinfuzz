@@ -7,6 +7,9 @@
   # modules
   modules
 }:
+let
+    inherit (lib) optionalString concatLines concatStringsSep;
+in
 stdenvNoCC.mkDerivation rec {
   pname = "bitcoinfuzz";
   name = "${pname}";
@@ -15,31 +18,30 @@ stdenvNoCC.mkDerivation rec {
     clang
   ];
 
-  buildInputs = [
-    modules.bitcoin-core
-    modules.rustbitcoin
-    modules.ldk
-    modules.lnd
-    modules.btcd
+  buildInputs = with modules; [
+    bitcoin-core
+    rustbitcoin
+    ldk
+    lnd
   ];
   
   src = ./.;
 
   # FIXME deciding what modules are available is quite verbose now
   # concatStringSep
-  CXXFLAGS= (if modules.bitcoin-core != null then " -DBITCOIN_CORE" else "")
-    + (if modules.rustbitcoin != null then " -DRUST_BITCOIN" else "")
-    + (if modules.btcd != null then " -DBTCD" else "")
-    + (if modules.ldk != null then " -DLDK" else "")
-    + (if modules.lnd != null then " -DLND" else "");
+  CXXFLAGS= with modules; concatStringsSep " " [
+    (optionalString (bitcoin-core != null) "-DBITCOIN_CORE")
+    (optionalString (rustbitcoin != null) "-DRUST_BITCOIN")
+    (optionalString (ldk != null) "-DLDK")
+    (optionalString (lnd != null) "-DLND")
+  ];
 
   # FIXME deciding what modules are available is quite verbose now
-  configurePhase = lib.concatLines [
-    (if modules.bitcoin-core != null then "cp ${modules.bitcoin-core.outPath}/modules/bitcoin/module.a modules/bitcoin/" else "")
-    (if modules.rustbitcoin != null then "cp ${modules.rustbitcoin.outPath}/modules/rustbitcoin/module.a modules/rustbitcoin/" else "")
-    (if modules.ldk != null then "cp ${modules.ldk.outPath}/modules/ldk/module.a modules/ldk/" else "")
-    (if modules.lnd != null then "cp ${modules.lnd.outPath}/modules/lnd/module.a modules/lnd/" else "")
-    (if modules.btcd != null then "cp ${modules.btcd.outPath}/modules/btcd/module.a modules/btcd/" else "")
+  configurePhase = with modules; concatLines [
+    (optionalString (bitcoin-core != null) "cp ${bitcoin-core.outPath}/modules/bitcoin/module.a modules/bitcoin/")
+    (optionalString (rustbitcoin != null) "cp ${rustbitcoin.outPath}/modules/rustbitcoin/module.a modules/rustbitcoin/")
+    (optionalString (ldk != null) "cp ${ldk.outPath}/modules/ldk/module.a modules/ldk/")
+    (optionalString (lnd != null) "cp ${lnd.outPath}/modules/lnd/module.a modules/lnd/")
   ];
 
   installPhase = ''

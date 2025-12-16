@@ -6,6 +6,7 @@
   openssl,
   pkg-config,
   makeWrapper,
+  python3,
 
   modules
 }:
@@ -25,10 +26,12 @@ stdenvNoCC.mkDerivation rec {
     bitcoin-core
     rustbitcoin
     rustbitcoinkernel
+    pybitcoinkernel
     ldk
     lnd
     btcd
     nbitcoin
+    python3
   ];
 
   runtimeLibDeps = [
@@ -44,6 +47,7 @@ stdenvNoCC.mkDerivation rec {
     (optionalString (bitcoin-core != null) "-DBITCOIN_CORE")
     (optionalString (rustbitcoin != null) "-DRUST_BITCOIN")
     (optionalString (rustbitcoinkernel != null) "-DRUSTBITCOINKERNEL")
+    (optionalString (pybitcoinkernel != null) "-DPYBITCOINKERNEL")
     (optionalString (ldk != null) "-DLDK")
     (optionalString (lnd != null) "-DLND")
     (optionalString (btcd != null) "-DBTCD")
@@ -55,6 +59,8 @@ stdenvNoCC.mkDerivation rec {
     (optionalString (bitcoin-core != null) "cp ${bitcoin-core.outPath}/modules/bitcoin/module.a modules/bitcoin/")
     (optionalString (rustbitcoin != null) "cp ${rustbitcoin.outPath}/modules/rustbitcoin/module.a modules/rustbitcoin/")
     (optionalString (rustbitcoinkernel != null) "cp ${rustbitcoinkernel.outPath}/modules/rustbitcoinkernel/module.a modules/rustbitcoinkernel/")
+    (optionalString (pybitcoinkernel != null) "cp ${pybitcoinkernel.outPath}/modules/pybitcoinkernel/pybitcoinkernel_lib.py ./main.py")
+    (optionalString (pybitcoinkernel != null) "cp ${pybitcoinkernel.outPath}/modules/pybitcoinkernel/module.a modules/pybitcoinkernel")
     (optionalString (ldk != null) "cp ${ldk.outPath}/modules/ldk/module.a modules/ldk/")
     (optionalString (lnd != null) "cp ${lnd.outPath}/modules/lnd/module.a modules/lnd/")
     (optionalString (btcd != null) "cp ${btcd.outPath}/modules/btcd/module.a modules/btcd/")

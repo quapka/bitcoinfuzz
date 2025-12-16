@@ -30,12 +30,14 @@
         ldk = pkgs.callPackage ./modules/ldk { };
         lnd = pkgs.callPackage ./modules/lnd { };
         nbitcoin = pkgs.callPackage ./modules/nbitcoin { };
+        pybitcoinkernel = with pkgs.python3Packages; pkgs.callPackage ./modules/pybitcoinkernel { };
         # TODO is the build of custommutator somehow affected by other chosen modules?
         custommutator = pkgs.callPackage ./custommutator { };
 
         modules = {
           inherit
           rustbitcoinkernel
+          pybitcoinkernel
           btcd
           ldk;
           bitcoin-core = null;

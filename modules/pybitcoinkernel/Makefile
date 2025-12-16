@@ -2,10 +2,13 @@ all: module.a
 
 CXXFLAGS += -Wall -Wextra -fsanitize=address,fuzzer -std=c++20 -I ../../include
 PYTHON_CFLAGS := $(shell python3-config --includes)
+PYBITCOINKERNEL_LIB := ./pybitcoinkernel_lib.py
 
-module.a: module.o
+module.a: module.o  $(PYBITCOINKERNEL_LIB)
 	$(AR) rcs $@ $^
 	ranlib $@
+
+$(PYBITCOINKERNEL_LIB):
 	cp pybitcoinkernel_lib.py ../../main.py
 
 module.o: module.cpp module.h

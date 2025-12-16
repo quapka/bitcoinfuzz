@@ -24,6 +24,7 @@ stdenvNoCC.mkDerivation rec {
   buildInputs = with modules; [
     bitcoin-core
     rustbitcoin
+    rustbitcoinkernel
     ldk
     lnd
     btcd
@@ -42,6 +43,7 @@ stdenvNoCC.mkDerivation rec {
   CXXFLAGS= with modules; concatStringsSep " " [
     (optionalString (bitcoin-core != null) "-DBITCOIN_CORE")
     (optionalString (rustbitcoin != null) "-DRUST_BITCOIN")
+    (optionalString (rustbitcoinkernel != null) "-DRUSTBITCOINKERNEL")
     (optionalString (ldk != null) "-DLDK")
     (optionalString (lnd != null) "-DLND")
     (optionalString (btcd != null) "-DBTCD")
@@ -52,6 +54,7 @@ stdenvNoCC.mkDerivation rec {
   configurePhase = with modules; concatLines [
     (optionalString (bitcoin-core != null) "cp ${bitcoin-core.outPath}/modules/bitcoin/module.a modules/bitcoin/")
     (optionalString (rustbitcoin != null) "cp ${rustbitcoin.outPath}/modules/rustbitcoin/module.a modules/rustbitcoin/")
+    (optionalString (rustbitcoinkernel != null) "cp ${rustbitcoinkernel.outPath}/modules/rustbitcoinkernel/module.a modules/rustbitcoinkernel/")
     (optionalString (ldk != null) "cp ${ldk.outPath}/modules/ldk/module.a modules/ldk/")
     (optionalString (lnd != null) "cp ${lnd.outPath}/modules/lnd/module.a modules/lnd/")
     (optionalString (btcd != null) "cp ${btcd.outPath}/modules/btcd/module.a modules/btcd/")
@@ -59,7 +62,7 @@ stdenvNoCC.mkDerivation rec {
     (optionalString (nbitcoin != null) "cp ${nbitcoin.outPath}/NBitcoin.CppBridge.so ./")
   ];
 
-  LD_LIBRARY_PATH = lib.makeLibraryPath [ modules.nbitcoin.outPath openssl openssl.dev ];
+  # LD_LIBRARY_PATH = lib.makeLibraryPath [ modules.nbitcoin.outPath openssl openssl.dev ];
 
   installPhase = ''
     install ${pname} --preserve-timestamps -D --target-directory $out/bin/

@@ -25,6 +25,7 @@
         # Build individual modules
         btcd = pkgs.callPackage ./modules/btcd/default.nix { };
         rustbitcoin = pkgs.callPackage ./modules/rustbitcoin { };
+        rustbitcoinkernel = pkgs.callPackage ./modules/rustbitcoinkernel { };
         bitcoin-core = pkgs.callPackage ./modules/bitcoin { };
         ldk = pkgs.callPackage ./modules/ldk { };
         lnd = pkgs.callPackage ./modules/lnd { };
@@ -34,11 +35,12 @@
 
         modules = {
           inherit
-          rustbitcoin
-          bitcoin-core
+          rustbitcoinkernel
           btcd
-          ldk
-          nbitcoin;
+          ldk;
+          bitcoin-core = null;
+          rustbitcoin = null;
+          nbitcoin = null;
           lnd = null;
         };
       in
